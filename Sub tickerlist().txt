@@ -1,0 +1,93 @@
+Sub tickerlist()
+Dim vol As Double
+Dim start As Long
+Dim QC As Integer
+Dim ws As Worksheet
+Dim PC As Double
+Dim Compname As String
+Dim tablerow As Integer
+Dim OPPrice As Double
+Dim ENPrice As Double
+Dim last_row1 As Long
+Dim last_row2 As Long
+start = 2
+vol = 0
+ENPrice = 0
+OPPrice = 0
+tablerow = 2
+last_row1 = Cells(Rows.Count, 1).End(xlUp).Row
+last_row2 = Cells(Rows.Count, 11).End(xlUp).Row
+
+Range("j1").Value = "ticker"
+Range("k1").Value = "quartly change"
+Range("l1").Value = "percent change"
+Range("m1").Value = "total vol"
+
+For Each ws In Worksheets
+
+    For i = 2 To last_row1
+        
+         If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+         
+         vol = vol + CDbl(Cells(i, 7).Value)
+         
+         QC = (Cells(i, 6) - Cells(tablerow, 3))
+         
+         PC = QC / Cells(start, 3)
+         
+         start = start + 1
+         
+         
+         
+         
+         Range("j" & tablerow).Value = Compname
+         
+         Range("m" & tablerow).Value = vol
+         
+         Range("K" & tablerow).Value = QC
+         
+         Range("L" & tablerow).Value = PC * 0.01
+         
+         tablerow = tablerow + 1
+         
+         
+         Else
+          
+         OPPrice = Cells(i, 3).Value
+         
+         Compname = Cells(i, 1).Value
+         
+         vol = CDbl(Cells(i, 7).Value) + CDbl(Cells(i + 1, 7).Value)
+         
+         Range("m" & i).Value = vol
+         
+        End If
+       
+    Next i
+    
+    For i = 2 To last_row2
+    
+            
+        If Cells(i, 11).Value > 0 Then
+        Cells(i, 11).Interior.ColorIndex = 4
+        
+        Else
+        
+        Cells(i, 11).Interior.ColorIndex = 3
+        
+        End If
+    
+    Next i
+
+    For i = 2 To last_row2
+    
+        Range("q2").Value = WorksheetFunction.Max(Range("k2:k" & tablerow))
+        Range("q3").Value = WorksheetFunction.Min(Range("k2:k" & tablerow))
+        Range("q4").Value = WorksheetFunction.Max(Range("m2:m" & tablerow))
+        
+    Next i
+    
+Next ws
+        
+    
+End Sub
